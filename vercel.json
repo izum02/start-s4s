@@ -1,10 +1,14 @@
 {
-  "version": 2,
-  "builds": [],
-  "routes": [
+  "builds": [
     {
-      "src": "/(.*)",
-      "dest": "startup.sh"
+      "src": "app/webpack.config.js",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "app/dist"
+      }
     }
+  ],
+  "routes": [
+    { "src": "/(.*)", "dest": "/index.html" }
   ]
 }
