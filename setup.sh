@@ -1,19 +1,26 @@
 #!/bin/bash
 
-# 1. リポジトリをクローン
-git clone https://huggingface.co/spaces/soiz1/soiz1-s4s-editor
-cd soiz1-s4s-editor || { echo "Clone failed"; exit 1; }
+# エラーが発生したらスクリプトを終了
+set -e
 
-# 2. Dockerfile が存在するか確認
-if [ ! -f Dockerfile ]; then
-  echo "Dockerfile が見つかりません。"
-  exit 1
-fi
+# 作業ディレクトリを作成
+mkdir -p /app
+cd /app || exit 1
 
-# 3. Docker イメージをビルド
-docker build -t soiz1-s4s-editor .
+# Hugging Face のリポジトリをクローン
+# 公開スペースなので、Git LFS に依存していない場合はそのまま clone 可能
+git clone https://huggingface.co/spaces/soiz1/soiz1-s4s-editor .
 
-# 4. コンテナを起動（例: ポート 7860）
-docker run -d -p 7860:7860 --name s4s-editor soiz1-s4s-editor
+# translations ディレクトリを作成し、権限を設定
+mkdir -p /app/translations
+chmod -R 777 /app/translations
+chmod -R 777 /app
 
-echo "http://localhost:7860 にアクセスしてください。"
+# 依存関係をインストール（互換性オプション付き）
+npm install --prefer-offline --no-audit --legacy-peer-deps
+
+# scratch-vm を追加インストール（Git URL）
+npm install scratch-vm@git+https://huggingface.co/datasets/soiz1/s4s-vm
+
+# サーバーを起動
+npm start
