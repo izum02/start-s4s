@@ -23,6 +23,3 @@ npm install --prefer-offline --no-audit --legacy-peer-deps
 
 # scratch-vm を Git URL から追加インストール
 npm install scratch-vm@git+https://huggingface.co/datasets/soiz1/s4s-vm
-
-# サーバーを起動
-npm start
